@@ -1,24 +1,38 @@
-﻿import tensorflow as tf
+﻿#
+# "radioactive_area.py"
+#
+#  an example of keras (with tensorflow by Google)
+#   by U.minor
+#    free to use with no warranty
+#
+# usage:
+# python radioactive_area.py 10000
+#
+# last number (10000) means learning epochs, default=1000 if omitted
+
+import tensorflow as tf
 import keras
 import numpy as np
 from numpy.random import *
 import matplotlib.pyplot as plt
+import sys
 
-i_train = []
-o_train = []
+argvs = sys.argv
 
-xc = 4
-yc = 3
+i_train, o_train = [], []
+
+xc, yc = 4.0, 3.0
 
 sample = 100
 
+# generate sample data
 for i in range(sample):
-	x = uniform(10)-2
-	y = uniform(10)-2
+	x = uniform(10) - 2
+	y = uniform(10) - 2
 	if np.sqrt((x - xc) ** 2 + (y - yc) ** 2) < 2.0:
-		c = 1.0
+		c = 1.0	# dangerous point
 	else:
-		c = 0.0
+		c = 0.0	# safe point
 
 	i_train.append([x, y])
 	o_train.append(c)
@@ -26,10 +40,7 @@ for i in range(sample):
 print(i_train)
 print(o_train)
 
-#
-
-xp = []
-yp = []
+xp, yp = [], []
 for i in range(sample):
 	if o_train[i] < 0.5:
 		xp.append(i_train[i][0])
@@ -37,8 +48,7 @@ for i in range(sample):
 
 plt.scatter(xp, yp, c="blue", marker="*", s=100)
 
-xn = []
-yn = []
+xn, yn = [], []
 for i in range(sample):
 	if o_train[i] >= 0.5:
 		xn.append(i_train[i][0])
@@ -47,38 +57,49 @@ for i in range(sample):
 plt.scatter(xn, yn, c="red", marker="*", s=200)
 #plt.show()
 
-#import sys
 #sys.exit()
 
 
 from keras.layers import Dense, Activation
-model=keras.models.Sequential()
+model = keras.models.Sequential()
 
-hid_units =3 # +4
+# neural network model parameters
+hidden_units = 3
+layer_depth = 1
 act =  'sigmoid' # 'relu' #
 
-model.add(Dense(units=hid_units, input_dim=2))
+# first hidden layer
+model.add(Dense(units = hidden_units, input_dim=2))
 model.add(Activation(act))
 
-#for i in range(2-1):
-#	model.add(Dense(units=hid_units, input_dim=hid_units))
-#	model.add(Activation(act))
+# additional hidden layers (if necessary)
+for i in range(layer_depth - 1):
+	model.add(Dense(units = hidden_units, input_dim = hidden_units))
+	model.add(Activation(act))
 
-model.add(Dense(units=2))
+# output layer
+model.add(Dense(units = 2))
 model.add(Activation('softmax'))
 
-model.compile(loss='sparse_categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
+model.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'sgd', metrics = ['accuracy'])
 
-model.fit(i_train, o_train, epochs=50000) #50000)
+# training
+if len(argvs) > 1 and argvs[1] != '':
+	ep = int(argvs[1]) # from command line
+else:
+	ep = 1000
+
+model.fit(i_train, o_train, epochs = ep)
 
 #score = model.evaluate(x_test, y_test, batch_size=1)
 #print("accuracy=", score[1])
 
-points = 40
-a=[]
-for ix in range(points):
-	for iy in range(points):
-		a.append([ix*10.0/points-1, iy*10.0/points-1])
+# predict
+ticks = 40
+a = []
+for ix in range(ticks):
+	for iy in range(ticks):
+		a.append([ix * 10.0 / ticks - 1.0, iy * 10.0 / ticks - 1.0])
 
 p = np.array(a)
 
@@ -87,23 +108,24 @@ print(r)
 
 thresh = 0.5
 
-xp = []
-yp = []
-for i in range(points ** 2):
+# safe area (blue points)
+xp, yp = [], []
+for i in range(ticks ** 2):
 	if r[i][1] < thresh:
 		xp.append(p[i][0])
 		yp.append(p[i][1])
 
 plt.scatter(xp, yp, c="blue", marker=".")
 
-xn = []
-yn = []
-for i in range(points ** 2):
+# dangerous area (red points)
+xn, yn = [], []
+for i in range(ticks ** 2):
 	if r[i][1] >= thresh:
 		xn.append(p[i][0])
 		yn.append(p[i][1])
 
 plt.scatter(xn, yn, c="red", marker=".")
+
 plt.show()
 
 
