@@ -12,6 +12,7 @@
 
 import tensorflow as tf
 import keras
+from keras.optimizers import SGD
 import numpy as np
 from numpy.random import *
 import matplotlib.pyplot as plt
@@ -81,7 +82,8 @@ for i in range(layer_depth - 1):
 model.add(Dense(units = 2))
 model.add(Activation('softmax'))
 
-model.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'sgd', metrics = ['accuracy'])
+sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(loss = 'sparse_categorical_crossentropy', optimizer = sgd, metrics = ['accuracy'])
 
 # training
 if len(argvs) > 1 and argvs[1] != '':
