@@ -17,6 +17,7 @@ import numpy as np
 from numpy.random import *
 import matplotlib.pyplot as plt
 import sys
+import time
 
 argvs = sys.argv
 
@@ -70,7 +71,7 @@ layer_depth = 1
 act =  'sigmoid' # 'relu' #
 
 # first hidden layer
-model.add(Dense(units = hidden_units, input_dim=2))
+model.add(Dense(units = hidden_units, input_dim = 2))
 model.add(Activation(act))
 
 # additional hidden layers (if necessary)
@@ -91,9 +92,12 @@ if len(argvs) > 1 and argvs[1] != '':
 else:
 	ep = 1000
 
-model.fit(i_train, o_train, epochs = ep)
+start_fit = time.time()
+model.fit(i_train, o_train, epochs = ep, verbose = 1)
+elapsed = time.time() - start_fit
+print("elapsed = {:.1f} sec".format(elapsed))
 
-#score = model.evaluate(x_test, y_test, batch_size=1)
+#score = model.evaluate(x_test, y_test, batch_size = 1)
 #print("accuracy=", score[1])
 
 # predict
