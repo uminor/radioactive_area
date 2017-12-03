@@ -42,21 +42,21 @@ for i in range(sample):
 print(i_train)
 print(o_train)
 
-xp, yp = [], []
+xps, yps = [], []
 for i in range(sample):
 	if o_train[i] < 0.5:
-		xp.append(i_train[i][0])
-		yp.append(i_train[i][1])
+		xps.append(i_train[i][0])
+		yps.append(i_train[i][1])
 
-plt.scatter(xp, yp, c="blue", marker="*", s=100)
-
-xn, yn = [], []
+xns, yns = [], []
 for i in range(sample):
 	if o_train[i] >= 0.5:
-		xn.append(i_train[i][0])
-		yn.append(i_train[i][1])
+		xns.append(i_train[i][0])
+		yns.append(i_train[i][1])
 
-plt.scatter(xn, yn, c="red", marker="*", s=200)
+## if plot input image
+#plt.scatter(xps, yps, c="blue", marker="*", s=100)
+#plt.scatter(xns, yns, c="red", marker="*", s=200)
 #plt.show()
 
 #sys.exit()
@@ -131,6 +131,9 @@ for i in range(ticks ** 2):
 		yn.append(p[i][1])
 
 plt.scatter(xn, yn, c="red", marker=".")
+
+plt.scatter(xps, yps, c="blue", marker="*", s=100)
+plt.scatter(xns, yns, c="red", marker="*", s=200)
 
 plt.show()
 
