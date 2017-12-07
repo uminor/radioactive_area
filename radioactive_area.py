@@ -55,9 +55,9 @@ for i in range(sample):
 		yns.append(i_train[i][1])
 
 ## if plot input image
-#plt.scatter(xps, yps, c="blue", marker="*", s=100)
-#plt.scatter(xns, yns, c="red", marker="*", s=200)
-#plt.show()
+plt.scatter(xps, yps, c="blue", marker="*", s=100)
+plt.scatter(xns, yns, c="red", marker="*", s=200)
+plt.show()
 
 #sys.exit()
 
@@ -71,16 +71,16 @@ layer_depth = 1
 act =  'sigmoid' # 'relu' #
 
 # first hidden layer
-model.add(Dense(units = hidden_units, input_dim = 2))
+model.add(Dense(units = hidden_units, input_dim = 2, use_bias=True))
 model.add(Activation(act))
 
 # additional hidden layers (if necessary)
 for i in range(layer_depth - 1):
-	model.add(Dense(units = hidden_units, input_dim = hidden_units))
+	model.add(Dense(units = hidden_units, input_dim = hidden_units, use_bias=True))
 	model.add(Activation(act))
 
 # output layer
-model.add(Dense(units = 2))
+model.add(Dense(units = 2, use_bias=True))
 model.add(Activation('softmax'))
 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
@@ -121,7 +121,7 @@ for i in range(ticks ** 2):
 		xp.append(p[i][0])
 		yp.append(p[i][1])
 
-plt.scatter(xp, yp, c="blue", marker=".")
+plt.scatter(xp, yp, c="cyan", marker=".")
 
 # dangerous area (red points)
 xn, yn = [], []
@@ -130,7 +130,7 @@ for i in range(ticks ** 2):
 		xn.append(p[i][0])
 		yn.append(p[i][1])
 
-plt.scatter(xn, yn, c="red", marker=".")
+plt.scatter(xn, yn, c="magenta", marker=".")
 
 plt.scatter(xps, yps, c="blue", marker="*", s=100)
 plt.scatter(xns, yns, c="red", marker="*", s=200)
