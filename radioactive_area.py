@@ -18,6 +18,8 @@ from numpy.random import *
 import matplotlib.pyplot as plt
 import sys
 import time
+#import os
+#os.environ["KERAS_BACKEND"] = "tensorflow"
 
 argvs = sys.argv
 
@@ -55,9 +57,9 @@ for i in range(sample):
 		yns.append(i_train[i][1])
 
 ## if plot input image
-plt.scatter(xps, yps, c="blue", marker="*", s=100)
-plt.scatter(xns, yns, c="red", marker="*", s=200)
-plt.show()
+#plt.scatter(xps, yps, c="blue", marker="*", s=100)
+#plt.scatter(xns, yns, c="red", marker="*", s=200)
+#plt.show()
 
 #sys.exit()
 
@@ -69,18 +71,19 @@ model = keras.models.Sequential()
 hidden_units = 3
 layer_depth = 1
 act =  'sigmoid' # 'relu' #
+bias = True
 
 # first hidden layer
-model.add(Dense(units = hidden_units, input_dim = 2, use_bias=True))
+model.add(Dense(units = hidden_units, input_dim = 2, use_bias = bias))
 model.add(Activation(act))
 
 # additional hidden layers (if necessary)
 for i in range(layer_depth - 1):
-	model.add(Dense(units = hidden_units, input_dim = hidden_units, use_bias=True))
+	model.add(Dense(units = hidden_units, input_dim = hidden_units, use_bias = bias))
 	model.add(Activation(act))
 
 # output layer
-model.add(Dense(units = 2, use_bias=True))
+model.add(Dense(units = 2, use_bias = bias))
 model.add(Activation('softmax'))
 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
